@@ -25,8 +25,8 @@ public:
 
     // Constructors
     list();
-    list(const list<T>&);
-    list(iterator, iterator);
+    list(const list<T>& input);
+    list(iterator from, iterator to);
     list(T*, T*);
 
     ~list();
@@ -35,24 +35,24 @@ public:
     unsigned size() const { return used; }
     bool empty() const { return used==0; }
     const T& front() const;
-    const iterator find(const T&) const;
+    const iterator find(const T& input) const;
 
     // Modification members
-    void push_front(const T&);
+    void push_front(const T& input);
     void pop_front();
-    iterator find(const T&);
-    void insert(const T&, unsigned);
-    void insert_after(iterator, const T&);
-    bool erase_one(const T&);
-    unsigned erase(const T&);
+    iterator find(const T& input);
+    void insert(const T& value, unsigned int number_of_copies);
+    void insert_after(iterator instertion_point, const T& input_data);
+    bool erase_one(const T& value);
+    unsigned int erase(const T& value);
     void clear();
 
     // Operators
-    list<T>& operator = (const list<T>&);
-    void operator += (const list<T>&);
+    list<T>& operator = (const list<T>& RHS);
+    void operator += (const list<T>& RHS);
 
     // Friends
-    friend std::ostream& operator << <T> (std::ostream&, const list<T>&);
+    friend std::ostream& operator << <T> (std::ostream& out, const list<T>& theList);
     friend class node_iterator<T>;
 
     // Forward iterator support
@@ -64,12 +64,12 @@ private:
     struct node
     {
 	node(const T& val=T(), node* n=0):data(val),link(n) { }
-	T data;
-	node* link;
+        T data;
+        node* link;
     };
     node* head;
     unsigned used;
-    node* copy(node*);
+    node* copy(node* input);
 };
 
 #include "list.tem"

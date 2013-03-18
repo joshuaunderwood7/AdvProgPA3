@@ -1,0 +1,232 @@
+// Author: Joshua Underwoood 
+// Course:  CSCI 3320, Spring 2013
+// File: list.tem
+// Class inplementation of an adt that represents a single-ended, 
+// singly-linked list with iterator support
+// for compatibility with the C++ standard template library
+
+
+// Constructors
+list::list()
+{
+    head = NULL;
+    used = 0;
+};
+
+template <typename T>
+list::list(const list<T>& input)
+{
+    if(!input.empty())
+    {
+        push_front(input.begin()->data);
+        iterator marker begin();
+        
+        for(iterator i = input.begin(); i != input.end(); )
+        {
+            i++;
+            insert_after(marker, i->data);
+            marker++;
+        }
+        insert_after(marker, input.end()->data;
+    }
+    else 
+    {
+        head = NULL;
+        used = 0;
+    }
+    
+};
+
+template <typename T>
+list::list(iterator from, iterator to)
+{
+    push_front(from->data);
+    iterator marker begin();
+    
+    for(iterator i = from; i != to; )
+    {
+        i++;
+        insert_after(marker, i->data);
+        marker++;
+    }
+    insert_after(marker, to->data;
+};
+
+template <typename T>
+list::list(T*, T*) { };
+
+list::~list()
+{
+    while(!empty())
+    {
+        pop_front();
+    }
+};
+
+// Constant members
+//unsigned size() const { return used; }
+//bool empty() const { return used==0; }
+template <typename T>
+const T& list::front() const
+{
+    if(!empty()) return begin()->data;
+    return T();
+};
+
+template <typename T>
+const iterator list::find(const T& input) const
+{
+    for(iterator i = begin(); i != NULL; i++)
+    {
+        if(i->data == input) return i;
+    }   
+    return NULL;
+};
+
+// Modification members
+template <typename T>
+void list::push_front(const T& input)
+{
+    node* newnode = new node;    
+    newnode->data = input;
+    newnode->link = head;
+    head = newnode;
+    ++used;
+};
+
+void list::pop_front()
+{
+    node* newnode = head;
+    head = head->link;
+    delete newnode;    
+    --used;
+};
+
+template <typename T>
+iterator list::find(const T& input)
+{
+    for(iterator i = begin(); i != NULL; i++)
+    {
+        if(i->data == input) return i;
+    }   
+    return NULL;
+};
+
+template <typename T>
+void list::insert(const T& value, unsigned int number_of_copies=1)
+{
+    for(unsigned int i = 0; i < number_of_copies; ++i)
+    {
+        push_front(value);
+    }
+};
+
+template <typename T>
+void list::insert_after(iterator instertion_point, const T& input_data)
+{
+    node* newnode = new node;
+    newnode->data = input_data;
+    newnode->link = instertion_point->link;
+    instertion_point->link = newnode;
+    ++used;
+};
+
+template <typename T>
+bool list::erase_one(const T& value)
+{
+    iterator i = find(value);
+    if(i == NULL) return false;
+
+    for(iterator j = begin(); j != NULL; j++)
+    {
+        if(j->link == i) 
+        {
+            j->link = i->link;
+            delete i;
+            used--;
+            return true;
+        }
+    }   
+};
+
+template <typename T>
+unsigned link::erase(const T& value)
+{
+    unsigned int i = 0;
+    while(erase_one(value))
+    {
+        ++i;
+    }
+    return i;
+};
+
+void list::clear()
+{
+    while(!empty())
+    {
+        pop_front();
+    }    
+};
+
+// Operators
+template <typename T>
+list<T>& list::operator = (const list<T>& RHS)
+{
+    delete RHS;
+    RHS = list(*this);
+    return *this;
+};
+
+template <typename T>
+void list::operator += (const list<T>& RHS)
+{
+    iterator i = this->begin();
+    while(i->link != NULL) i++;
+
+    iterator j = RHS.begin();
+    while(j->link != NULL)
+    {
+        insert_after(i, j->data);
+        i++;
+        j++;
+    }
+};
+
+// Friends
+template <typename T>
+friend std::ostream& operator << <T> (std::ostream& out, const list<T>& theList)
+{
+    out << "< ";
+    for(list<T>::iterator i = theList.begin(); i != theList.end(); i++)
+    {
+        out << i->data << ", ";
+    }
+    out << i->data << " >\n";
+    return out;
+};
+
+template <typename T>
+friend class node_iterator<T>;
+
+// Forward iterator support
+iterator list::begin()
+{
+    return head;    
+};
+iterator list::end()
+{
+    iterator i = begin();
+    while(i->link != NULL;) i++;
+    return i;    
+};
+
+//private:
+// Nest our linked-list node
+node* list::copy(node* input)
+{
+    node* newnode = new node;
+    newnode->data = input->data;
+    newnode->link = input->link;
+    return newnode;    
+};
+
