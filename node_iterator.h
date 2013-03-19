@@ -12,11 +12,11 @@ class node_iterator
         node_iterator<T>& operator*() const;
         node_iterator<T>* operator->() const;
 //        friend void swap(node_iterator<T>& lhs, node_iterator<T>& rhs); 
-//        friend bool operator==(const node_iterator<T>& lhs, const node_iterator<T>& rhs);
-//        friend bool operator!=(const node_iterator<T>& lhs, const node_iterator<T>& rhs); 
-    private:
+        bool operator==(const node_iterator<T>& rhs);
+        bool operator!=(const node_iterator<T>& rhs); 
+    protected:
         T data;
-        list<T>::node* link;
+        node<T>* link;
 };
 
 

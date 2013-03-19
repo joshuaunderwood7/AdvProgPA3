@@ -9,6 +9,15 @@
 
 #include <iostream>
 
+//node struct
+template <typename T>
+struct node
+{
+    node(const T& val=T(), node* n=0):data(val),link(n) { }
+    T data;
+    node* link;
+};
+
 // To be developed once the lecture is completed
 #include "node_iterator.h"
 
@@ -63,7 +72,7 @@ private:
     // Nest our linked-list node
     struct node
     {
-	node(const T& val=T(), node* n=0):data(val),link(n) { }
+        node(const T& val=T(), node* n=0):data(val),link(n) { }
         T data;
         node* link;
     };
