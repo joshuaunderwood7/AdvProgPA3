@@ -17,27 +17,22 @@ list<T>::list()
 template <typename T>
 list<T>::list(const list<T>& input)
 {
-    if(!input.empty())
-    {
-        push_front(input.begin()->data);
-        iterator marker = begin();
-        
-        for(iterator i = input.begin(); i != input.end(); )
-        {
-            i++;
-            insert_after(marker, i->data);
-            marker++;
-        }
-        insert_after(marker, input.end()->data);
-    }
-    else 
-    {
-        head = NULL;
-        used = 0;
-    }
+    head = NULL;
+    used = 0;
     
+    list<T> reversed;
+    for(node* i = input.head; i != NULL; i = i->link)
+    {
+        reversed.push_front(i->data);
+    }
+    while(!reversed.empty())
+    {
+        push_front(reversed.front());
+        reversed.pop_front();
+    }
 };
 
+/*
 template <typename T>
 list<T>::list(iterator from, iterator to)
 {
@@ -52,9 +47,19 @@ list<T>::list(iterator from, iterator to)
     }
     insert_after(marker, to->data);
 };
+*/
 
 template <typename T>
-list<T>::list(T*, T*) { };
+list<T>::list(T* from, T* to) 
+{ 
+    head = NULL;
+    used = 0;
+
+    for(T i = *from; i <= *to; ++i)
+    {
+        push_front(i);
+    }
+};
 
 template <typename T>
 list<T>::~list()
@@ -71,11 +76,12 @@ list<T>::~list()
 template <typename T>
 const T& list<T>::front() const
 {
-    if(!empty()) return begin()->data;
+    if(!empty()) return head->data;
     std::cerr << "Empty list\n";
-    return NULL;
+    return T();
 };
 
+/*
 template <typename T>
 const typename list<T>::iterator list<T>::find(const T& input) const
 {
@@ -85,14 +91,13 @@ const typename list<T>::iterator list<T>::find(const T& input) const
     }   
     return NULL;
 };
+*/
 
 // Modification members
 template <typename T>
 void list<T>::push_front(const T& input)
 {
-    node* newnode = new node;    
-    newnode->data = input;
-    newnode->link = head;
+    node* newnode = new node(input, head);    
     head = newnode;
     ++used;
 };
@@ -106,6 +111,7 @@ void list<T>::pop_front()
     --used;
 };
 
+/*
 template <typename T>
 typename list<T>::iterator list<T>::find(const T& input)
 {
@@ -115,31 +121,51 @@ typename list<T>::iterator list<T>::find(const T& input)
     }   
     return NULL;
 };
+*/
 
 template <typename T>
 void list<T>::insert(const T& value, unsigned int where=0)
 {
     node* newnode = new node;
     newnode->data = value;
-    iterator iter = begin();
+    node*  iter = head;
     unsigned int i = 0;
-    while(i < where-1) iter++;
-    if(iter == begin()) push_front(value);
-    else
+    if(where == 0)
     {
-        if(iter->link != NULL)
-        {
-        newnode->link = iter->link->link;
-        iter->link = newnode;
-        }
-        else
-        {
-            iter->link = newnode;
-            newnode->link = NULL;
-        }
+        push_front(value);
+        return;
     }
+
+    if(iter == NULL) 
+    {
+        std::cerr << "List too short (empty) adding " << value <<
+                    "to front of list\n";
+        push_front(value);
+        return;
+    }
+
+    while(i < where-1 && iter->link != NULL) 
+    {
+        i++;
+        iter = iter->link;
+    }
+
+    if(iter->link == NULL)
+    {
+        std::cerr << "List too short. Adding " << value << " to end of list\n";   
+        iter->link = newnode;
+        newnode->link = NULL;
+        used++;
+        return;     
+    } 
+
+    newnode->link = iter->link->link;
+    iter->link = newnode;
+    used++;
+    return;
 };
 
+/*
 template <typename T>
 void list<T>::insert_after(iterator instertion_point, const T& input_data)
 {
@@ -149,16 +175,29 @@ void list<T>::insert_after(iterator instertion_point, const T& input_data)
     instertion_point->link = newnode;
     ++used;
 };
+*/
 
 template <typename T>
 bool list<T>::erase_one(const T& value)
 {
-    iterator i = find(value);
+    node* i = head;
     if(i == NULL) return false;
 
-    for(iterator j = begin(); j != NULL; j++)
+    if(i->data == value)
     {
-        if(j->link == i) 
+        head = i->link;
+        delete i;
+        used--;
+        return true;
+    }
+
+    for(node* j = head; j != NULL; j = j->link)
+    {
+        i = j->link;
+        
+        if(i == NULL) return false;
+
+        if(i->data == value) 
         {
             j->link = i->link;
             delete i;
@@ -172,57 +211,70 @@ template <typename T>
 unsigned int list<T>::erase(const T& value)
 {
     unsigned int i = 0;
-    while(erase_one(value))
-    {
-        ++i;
-    }
+    while(erase_one(value)) i++;
     return i;
 };
 
 template <typename T>
 void list<T>::clear()
 {
-    while(!empty())
-    {
-        pop_front();
-    }    
+    while(!empty()) pop_front();    
 };
 
 // Operators
 template <typename T>
 list<T>& list<T>::operator = (const list<T>& RHS)
 {
-    delete RHS;
-    RHS = list<T>(*this);
+    this->clear();
+    list<T> copy(RHS);
+    list<T> reversed;
+    while(!copy.empty())
+    {
+        reversed.push_front(copy.front());
+        copy.pop_front();
+    }
+    while(!reversed.empty())
+    {
+        this->push_front(reversed.front());
+        reversed.pop_front();
+    }
     return *this;
 };
 
 template <typename T>
 void list<T>::operator += (const list<T>& RHS)
 {
-    iterator i = this->begin();
-    while(i->link != NULL) i++;
+    list<T> copy(RHS);
+    list<T> reversed;
 
-    iterator j = RHS.begin();
-    while(j->link != NULL)
+    while(!this->empty())
     {
-        insert_after(i, j->data);
-        i++;
-        j++;
+        reversed.push_front(this->front());
+        this->pop_front();
+    }
+    while(!copy.empty())
+    {
+        reversed.push_front(copy.front());
+        copy.pop_front();
+    }
+    while(!reversed.empty())
+    {
+        this->push_front(reversed.front());
+        reversed.pop_front();
     }
 };
 
 // Friends
 template <typename T>
-std::ostream& operator << (std::ostream& out, const list<T>& theList)
+std::ostream& operator << (std::ostream& out, list<T>& theList)
 {
+    typename list<T>::node* i;
     out << "< ";
-    typename list<T>::iterator i = theList.begin();
-    for( ; i != theList.end(); i++)
+    for(i = theList.head ; i != NULL; i = i->link)
     {
         out << i->data << ", ";
     }
-    out << i->data << " >\n";
+    out << " >\n";
     return out;
 };
 
@@ -230,10 +282,12 @@ std::ostream& operator << (std::ostream& out, const list<T>& theList)
 //class node_iterator<T>;
 
 // Forward iterator support
+/*
 template <typename T>
-typename list<T>::iterator list<T>::begin()
+typename list<T>::iterator list<T>::begin() 
 {
-    return head;    
+    list<T>::iterator newnode(head);
+    return newnode;    
 };
 
 template <typename T>
@@ -243,6 +297,7 @@ typename list<T>::iterator list<T>::end()
     while(i->link != NULL) i++;
     return i;    
 };
+*/
 
 //private:
 // Nest our linked-list node

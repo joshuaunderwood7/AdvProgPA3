@@ -9,17 +9,8 @@
 
 #include <iostream>
 
-//node struct
-template <typename T>
-struct node
-{
-    node(const T& val=T(), node* n=0):data(val),link(n) { }
-    T data;
-    node* link;
-};
-
 // To be developed once the lecture is completed
-#include "node_iterator.h"
+//#include "node_iterator.h"
 
 // Forward declarations for overloading operator <<
 template <typename T> class list;
@@ -30,12 +21,12 @@ template <typename T>
 class list
 {
 public:
-    typedef node_iterator<T> iterator;
+//    typedef node_iterator<T> iterator;
 
     // Constructors
     list();
     list(const list<T>& input);
-    list(iterator from, iterator to);
+//    list(iterator from, iterator to);
     list(T*, T*);
 
     ~list();
@@ -44,14 +35,14 @@ public:
     unsigned size() const { return used; }
     bool empty() const { return used==0; }
     const T& front() const;
-    const iterator find(const T& input) const;
+//    const iterator find(const T& input) const;
 
     // Modification members
     void push_front(const T& input);
     void pop_front();
-    iterator find(const T& input);
-    void insert(const T& value, unsigned int number_of_copies);
-    void insert_after(iterator instertion_point, const T& input_data);
+//    iterator find(const T& input);
+    void insert(const T& value, unsigned int where);
+//    void insert_after(iterator instertion_point, const T& input_data);
     bool erase_one(const T& value);
     unsigned int erase(const T& value);
     void clear();
@@ -62,13 +53,14 @@ public:
 
     // Friends
     friend std::ostream& operator << <T> (std::ostream& out, const list<T>& theList);
-    friend class node_iterator<T>;
+    //friend class node_iterator<T>;
 
     // Forward iterator support
-    iterator begin();
-    iterator end();
+//    iterator begin();
+//    iterator end();
 
 private:
+public:
     // Nest our linked-list node
     struct node
     {
@@ -76,9 +68,9 @@ private:
         T data;
         node* link;
     };
-    node* head;
     unsigned used;
     node* copy(node* input);
+    node* head;
 };
 
 #include "list.tem"
