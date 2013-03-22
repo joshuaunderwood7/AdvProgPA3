@@ -21,12 +21,12 @@ template <typename T>
 class list
 {
 public:
-//    typedef node_iterator<T> iterator;
+    typedef node_iterator<T> iterator;
 
     // Constructors
     list();
     list(const list<T>& input);
-//    list(iterator from, iterator to);
+    list(iterator from, iterator to);
     list(T*, T*);
 
     ~list();
@@ -42,7 +42,7 @@ public:
     void pop_front();
 //    iterator find(const T& input);
     void insert(const T& value, unsigned int where);
-//    void insert_after(iterator instertion_point, const T& input_data);
+    void insert_after(iterator instertion_point, const T& input_data);
     bool erase_one(const T& value);
     unsigned int erase(const T& value);
     void clear();
@@ -56,8 +56,8 @@ public:
     friend class node_iterator<T>;
 
     // Forward iterator support
-//    iterator begin();
-//    iterator end();
+    iterator begin();
+    iterator end();
 
 private:
     // Nest our linked-list node
@@ -69,6 +69,7 @@ private:
     };
     unsigned int used;
     node* copy(node* input);
+public:
     node* head;
 };
 
