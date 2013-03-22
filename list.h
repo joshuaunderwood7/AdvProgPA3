@@ -9,12 +9,12 @@
 
 #include <iostream>
 
-// To be developed once the lecture is completed
-//#include "node_iterator.h"
 
 // Forward declarations for overloading operator <<
 template <typename T> class list;
 template <typename T> std::ostream& operator << (std::ostream&, const list<T>&);
+
+#include "node_iterator.h"
 
 // Class definition
 template <typename T>
@@ -32,7 +32,7 @@ public:
     ~list();
 
     // Constant members
-    unsigned size() const { return used; }
+    unsigned int size() const { return used; }
     bool empty() const { return used==0; }
     const T& front() const;
 //    const iterator find(const T& input) const;
@@ -53,14 +53,13 @@ public:
 
     // Friends
     friend std::ostream& operator << <T> (std::ostream& out, const list<T>& theList);
-    //friend class node_iterator<T>;
+    friend class node_iterator<T>;
 
     // Forward iterator support
 //    iterator begin();
 //    iterator end();
 
 private:
-public:
     // Nest our linked-list node
     struct node
     {
@@ -68,10 +67,11 @@ public:
         T data;
         node* link;
     };
-    unsigned used;
+    unsigned int used;
     node* copy(node* input);
     node* head;
 };
 
 #include "list.tem"
+//#include "node_iterator.tem"
 #endif

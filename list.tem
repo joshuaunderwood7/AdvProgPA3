@@ -71,8 +71,7 @@ list<T>::~list()
 };
 
 // Constant members
-//unsigned size() const { return used; }
-//bool empty() const { return used==0; }
+
 template <typename T>
 const T& list<T>::front() const
 {
@@ -266,7 +265,7 @@ void list<T>::operator += (const list<T>& RHS)
 
 // Friends
 template <typename T>
-std::ostream& operator << (std::ostream& out, list<T>& theList)
+std::ostream& operator << (std::ostream& out, const list<T>& theList)
 {
     typename list<T>::node* i;
     out << "< ";
@@ -278,8 +277,6 @@ std::ostream& operator << (std::ostream& out, list<T>& theList)
     return out;
 };
 
-//template <typename T>
-//class node_iterator<T>;
 
 // Forward iterator support
 /*
