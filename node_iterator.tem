@@ -1,0 +1,66 @@
+
+template <typename T>
+node_iterator<T>::node_iterator(const node_iterator<T>& input)
+{
+    element = input.element;
+};
+
+template <typename T>
+node_iterator<T>::~node_iterator<T>() 
+{
+//    delete element;
+};
+
+template <typename T>
+node_iterator<T>& node_iterator<T>::operator=(const node_iterator<T>& input)
+{
+    element = input.element;    
+    return *this;
+};
+
+template <typename T>
+node_iterator<T>& node_iterator<T>::operator++(int)
+{
+    if(element != NULL)
+    {
+        element = element->link;    
+    }
+    return *this;
+};
+
+template <typename T>
+node_iterator<T>& node_iterator<T>::operator*() const
+{
+    return *this;
+};
+
+/*
+template <typename T>
+void swap(node_iterator<T>& lhs, node_iterator<T>& rhs)
+{
+    node_iterator<T> temp = lhs;
+    lhs = rhs;
+    rhs = temp;
+}; 
+*/
+
+template <typename T>
+node_iterator<T>* node_iterator<T>::operator->() const
+{
+    return this;
+};
+
+template <typename T>
+bool node_iterator<T>::operator==(const node_iterator<T>& rhs)
+{
+    if(this->element == rhs.element) return true;    
+    return false;
+};
+
+template <typename T>
+bool node_iterator<T>::operator!=(const node_iterator<T>& rhs)
+{
+    if(this->element == rhs.element) return false;    
+    return true;
+};
+

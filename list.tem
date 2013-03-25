@@ -54,7 +54,7 @@ list<T>::list(T* from, T* to)
     head = NULL;
     used = 0;
 
-    for(T i = *from; i <= *to; ++i)
+    for(T i = *to; i <= *from; ++i)
     {
         push_front(i);
     }
@@ -76,20 +76,18 @@ const T& list<T>::front() const
 {
     if(!empty()) return head->data;
     std::cerr << "Empty list\n";
-    return T();
+    return head->data;
 };
 
-/*
 template <typename T>
 const typename list<T>::iterator list<T>::find(const T& input) const
 {
-    for(iterator i = begin(); i != NULL; i++)
+    for(iterator i = begin(); i != end(); i++)
     {
-        if(i->data == input) return i;
+        if(i.element->data == input) return i;
     }   
-    return NULL;
+    return typename list<T>::iterator();
 };
-*/
 
 // Modification members
 template <typename T>
@@ -109,17 +107,15 @@ void list<T>::pop_front()
     --used;
 };
 
-/*
 template <typename T>
 typename list<T>::iterator list<T>::find(const T& input)
 {
-    for(iterator i = begin(); i != NULL; i++)
+    for(iterator i = begin(); i != end(); i++)
     {
-        if(i->data == input) return i;
+        if(i.element->data == input) return i;
     }   
-    return NULL;
+    return typename list<T>::iterator();
 };
-*/
 
 template <typename T>
 void list<T>::insert(const T& value, unsigned int where=0)
@@ -168,7 +164,10 @@ void list<T>::insert_after(iterator instertion_point, const T& input_data)
 {
     node* newnode = new node;
     newnode->data = input_data;
-    newnode->link = instertion_point.element->link;
+    if(instertion_point.element->link != NULL)
+        newnode->link = NULL;
+    else
+        newnode->link = instertion_point.element->link;
     instertion_point.element->link = newnode;
     ++used;
 };
@@ -283,11 +282,8 @@ std::ostream& operator << (std::ostream& out, const list<T>& theList)
 template <typename T>
 typename list<T>::iterator list<T>::begin() 
 {
-    std::cout << "begin()\n";
     list<T>::iterator newnode;
-    std::cout << "iterator ok\n";
-    newnode.element = copy(head);
-    std::cout << "element->link = head\n";
+    newnode.element = head;
     return newnode;    
 };
 
@@ -295,7 +291,7 @@ template <typename T>
 typename list<T>::iterator list<T>::end()
 {
     iterator i = begin();
-    while(i.element->link != NULL) i++;
+    while(i.element != NULL) i++;
     return i;    
 };
 
@@ -305,15 +301,9 @@ typename list<T>::iterator list<T>::end()
 template <typename T>
 typename list<T>::node* list<T>::copy(node* input)
 {
-    std::cout << "copy()\n";
     node* newnode = new node;
-    std::cout << " copy():newnode made\n";
-    std::cout << " newnode-> data = " << newnode->data << std::endl;
-    std::cout << " input-> data = " << input->data << std::endl;
     newnode->data = input->data;
-    std::cout << " copy() data copied\n";
     newnode->link = input->link;
-    std::cout << " copy(): link copied\n";
     return newnode;    
 };
 

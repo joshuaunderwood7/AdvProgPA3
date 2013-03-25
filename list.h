@@ -35,12 +35,12 @@ public:
     unsigned int size() const { return used; }
     bool empty() const { return used==0; }
     const T& front() const;
-//    const iterator find(const T& input) const;
+    const iterator find(const T& input) const;
 
     // Modification members
     void push_front(const T& input);
     void pop_front();
-//    iterator find(const T& input);
+    iterator find(const T& input);
     void insert(const T& value, unsigned int where);
     void insert_after(iterator instertion_point, const T& input_data);
     bool erase_one(const T& value);
